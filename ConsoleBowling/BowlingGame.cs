@@ -17,11 +17,13 @@ namespace ConsoleBowling
 
             for (int i = 0; i < rolls.Length; i++)
             {
-                if (currentFrame == 10) //Game Over - all frames counted
+                if (currentFrame == 10) 
                 {
+                    //Game Over - all frames counted
                     break;
                 }
 
+                //add the roll score to the current frame
                 frames[currentFrame] += rolls[i];
 
                 if (rolls[i] == 10) //Strike!
@@ -45,14 +47,8 @@ namespace ConsoleBowling
                         {
                             frames[currentFrame] += rolls[i + 1];
                         }
-
-                        AdvanceFrame();
-                        continue;
                     }
-                }
 
-                if (ball == 2)
-                {
                     AdvanceFrame();
                     continue;
                 }
@@ -60,6 +56,7 @@ namespace ConsoleBowling
                 ball++;
             }
 
+            //last element is the player's total score
             frames[10] = frames.Sum();
 
             return frames;
