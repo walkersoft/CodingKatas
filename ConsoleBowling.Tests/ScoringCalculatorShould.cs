@@ -66,5 +66,15 @@ namespace ConsoleBowling.Tests
             Assert.Equal(6, frames[1]);
             Assert.Equal(20, frames[10]);
         }
+
+        [Fact]
+        public void CalculateSpareMarkWithoutBonusesYet()
+        {
+            int[] rolls = { 5, 5 };
+            int[] frames = game.CalculateScore(rolls);
+
+            Assert.Equal(10, frames[0]);
+            Assert.Equal(10, frames[10]);
+        }
     }
 }

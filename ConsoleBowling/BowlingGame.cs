@@ -35,7 +35,7 @@ namespace ConsoleBowling
                 {
                     if ((rolls[i] + rolls[i-1]) == 10) //Spare!
                     {
-                        if (rolls.Length >= i + 1)
+                        if (rolls.Length > i + 1)
                         {
                             frames[currentFrame] += rolls[i + 1];
                             AdvanceFrame();
