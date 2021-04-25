@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleBowling
 {
-    public class BowlingGame
+    public class ScoringCalculator
     {
         private int currentFrame = 0;
         private int ball = 1;
