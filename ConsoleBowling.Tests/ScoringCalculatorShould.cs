@@ -121,5 +121,29 @@ namespace ConsoleBowling.Tests
             Assert.Equal(300, frames[10]);
             Assert.Equal(12, rolls.Length);
         }
+
+        [Fact]
+        public void CalculateGameOfMixedScoresAndMarks()
+        {
+            int[] rolls = { 6, 4, 7, 2, 10, 6, 4, 6, 1, 4, 6, 8, 2, 10, 10, 10, 6, 4 };
+            int[] frames = game.CalculateScore(rolls);
+
+            Assert.Equal(183, frames[10]);
+        }
+
+        [Fact]
+        public void NotCalculateRollsBeyondFrameTen()
+        {
+            int[] rolls = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 };
+            int[] frames = game.CalculateScore(rolls);
+
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.Equal(15, frames[i]);
+            }
+
+            Assert.Equal(150, frames[10]);
+            Assert.Equal(25, rolls.Length);
+        }
     }
 }
