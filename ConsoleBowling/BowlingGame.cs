@@ -30,7 +30,20 @@ namespace ConsoleBowling
                         continue;
                     }
                 }
-                
+
+                if (ball == 2)
+                {
+                    if ((rolls[i] + rolls[i-1]) == 10) //Spare!
+                    {
+                        if (rolls.Length >= i + 1)
+                        {
+                            frames[currentFrame] += rolls[i + 1];
+                            AdvanceFrame();
+                            continue;
+                        }
+                    }
+                }
+
                 if (ball == 2)
                 {
                     AdvanceFrame();
