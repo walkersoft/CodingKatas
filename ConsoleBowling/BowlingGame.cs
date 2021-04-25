@@ -17,6 +17,11 @@ namespace ConsoleBowling
 
             for (int i = 0; i < rolls.Length; i++)
             {
+                if (currentFrame == 10) //Game Over - all frames counted
+                {
+                    break;
+                }
+
                 frames[currentFrame] += rolls[i];
 
                 if (rolls[i] == 10) //Strike!
@@ -35,12 +40,14 @@ namespace ConsoleBowling
                 {
                     if ((rolls[i] + rolls[i-1]) == 10) //Spare!
                     {
+                        //add the next roll as bonus point, if it exists
                         if (rolls.Length > i + 1)
                         {
                             frames[currentFrame] += rolls[i + 1];
-                            AdvanceFrame();
-                            continue;
                         }
+
+                        AdvanceFrame();
+                        continue;
                     }
                 }
 

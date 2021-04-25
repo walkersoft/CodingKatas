@@ -76,5 +76,50 @@ namespace ConsoleBowling.Tests
             Assert.Equal(10, frames[0]);
             Assert.Equal(10, frames[10]);
         }
+
+        [Fact]
+        public void CalculateFullGameWithoutAnyMarks()
+        {
+            int[] rolls = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 };
+            int[] frames = game.CalculateScore(rolls);
+
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.Equal(4, frames[i]);
+            }
+
+            Assert.Equal(40, frames[10]);
+            Assert.Equal(20, rolls.Length);
+        }
+
+        [Fact]
+        public void CalculateFullGameOfSpareMarks()
+        {
+            int[] rolls = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 };
+            int[] frames = game.CalculateScore(rolls);
+
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.Equal(15, frames[i]);
+            }
+
+            Assert.Equal(150, frames[10]);
+            Assert.Equal(21, rolls.Length);
+        }
+
+        [Fact]
+        public void CalculateFullGameOfStrikeMarks()
+        {
+            int[] rolls = { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
+            int[] frames = game.CalculateScore(rolls);
+
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.Equal(30, frames[i]);
+            }
+
+            Assert.Equal(300, frames[10]);
+            Assert.Equal(12, rolls.Length);
+        }
     }
 }
