@@ -1,12 +1,11 @@
-﻿using System;
+﻿using FizzBuzz;
+using System;
 
-namespace FizzBuzz
+//Play FizzBuzz till 100
+//See: https://en.wikipedia.org/wiki/Fizz_buzz
+FizzBuzzGame game = new();
+
+for (int i = 1; i < 100; i++)
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello World!");
-        }
-    }
+    Console.WriteLine(game.WhatIs(i));
 }
