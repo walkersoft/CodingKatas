@@ -33,5 +33,16 @@ namespace ConsoleBowling.Tests
             Assert.Equal(6, frames[2]);
             Assert.Equal(24, frames[10]);
         }
+
+        [Fact]
+        public void CalculateFrameWithStrikeMarkAndBonuses()
+        {
+            int[] rolls = { 10, 4, 3 };
+            int[] frames = game.CalculateScore(rolls);
+
+            Assert.Equal(17, frames[0]);
+            Assert.Equal(7, frames[1]);
+            Assert.Equal(24, frames[10]);
+        }
     }
 }
