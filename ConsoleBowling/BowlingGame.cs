@@ -21,14 +21,14 @@ namespace ConsoleBowling
 
                 if (rolls[i] == 10) //Strike!
                 {
-                    //look ahead two rolls (if available) and add them as bonus points
-                    //and then advance the frame
-                    if (rolls.Length >= i + 2)
+                    //add the next two rolls as bonus points, if they exist
+                    if (rolls.Length > i + 2)
                     {
                         frames[currentFrame] += rolls[i + 1] + rolls[i + 2];
-                        AdvanceFrame();
-                        continue;
                     }
+                    
+                    AdvanceFrame();
+                    continue;
                 }
 
                 if (ball == 2)
