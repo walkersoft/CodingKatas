@@ -15,12 +15,21 @@ namespace ConsoleBowling
         {
             int[] frames = new int[11];
 
+            //any roll can never be more than 10
+            rolls = ClampRolls(rolls);
+
             for (int i = 0; i < rolls.Length; i++)
             {
                 if (currentFrame == 10) 
                 {
                     //Game Over - all frames counted
                     break;
+                }
+
+                //check second ball in frame isn't more than a spare amount
+                if (ball == 2)
+                {
+                    rolls[i] = Math.Clamp(rolls[i], 0, 10 - rolls[i - 1]);
                 }
 
                 //add the roll score to the current frame
@@ -66,6 +75,16 @@ namespace ConsoleBowling
         {
             ball = 1;
             currentFrame++;
+        }
+
+        private int[] ClampRolls(int[] rolls)
+        {
+            for (int i = 0; i < rolls.Length; i++)
+            {
+                rolls[i] = Math.Clamp(rolls[i], 0, 10);
+            }
+
+            return rolls;
         }
     }
 }

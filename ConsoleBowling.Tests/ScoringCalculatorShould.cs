@@ -125,10 +125,10 @@ namespace ConsoleBowling.Tests
         [Fact]
         public void CalculateGameOfMixedScoresAndMarks()
         {
-            int[] rolls = { 6, 4, 7, 2, 10, 6, 4, 6, 1, 4, 6, 8, 2, 10, 10, 10, 6, 4 };
+            int[] rolls = { 6, 4, 7, 0, 10, 6, 4, 6, 1, 4, 6, 8, 2, 10, 10, 10, 6, 4 };
             int[] frames = scorer.CalculateScore(rolls);
 
-            Assert.Equal(183, frames[10]);
+            Assert.Equal(181, frames[10]);
         }
 
         [Fact]
@@ -144,6 +144,29 @@ namespace ConsoleBowling.Tests
 
             Assert.Equal(150, frames[10]);
             Assert.Equal(25, rolls.Length);
+        }
+
+        [Fact]
+        public void NotAddMoreThanStrikeValueToFrames()
+        {
+            int[] rolls = { 11, 12, 13 };
+            int[] frames = scorer.CalculateScore(rolls);
+
+            Assert.Equal(30, frames[0]);
+            Assert.Equal(10, frames[1]);
+            Assert.Equal(10, frames[2]);
+            Assert.Equal(50, frames[10]);
+        }
+
+        [Fact]
+        public void NotAddMoreThanSpareValueToFrames()
+        {
+            int[] rolls = { 5, 0, 6, 7 };
+            int[] frames = scorer.CalculateScore(rolls);
+
+            Assert.Equal(5, frames[0]);
+            Assert.Equal(10, frames[1]);
+            Assert.Equal(15, frames[10]);
         }
     }
 }
