@@ -1,12 +1,33 @@
-﻿using System;
+﻿using ConsoleBowling;
+using System;
 
-namespace ConsoleBowling
+var scorer = new ScoringCalculator();
+int[] rolls = { 2, 4 };
+int[] frames = scorer.CalculateScore(rolls);
+
+
+DrawScoreboard();
+
+static void DrawScoreboard()
 {
-    class Program
+    DrawBorder();
+    Console.Write("|");
+    
+    for (int f = 1; f <= 10; f++)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello World!");
-        }
+        Console.Write(string.Format("F:{0:00}|", f));
     }
+
+    Console.WriteLine();
+    DrawBorder();
+}
+
+static void DrawBorder()
+{
+    Console.Write("+");
+    for (int i = 0; i < 10; i++)
+    {
+        Console.Write("----+");
+    }
+    Console.WriteLine();
 }
