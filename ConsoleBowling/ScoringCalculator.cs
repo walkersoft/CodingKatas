@@ -10,10 +10,13 @@ namespace ConsoleBowling
     {
         private int currentFrame = 0;
         private int ball = 1;
+        private int[] rolls;
+        private int[] frames;
 
-        public int[] CalculateScore(int[] rolls)
+        public int[] CalculateScore(int[] incomingRolls)
         {
-            int[] frames = new int[11];
+            rolls = incomingRolls;
+            frames = new int[11];
 
             //any roll can never be more than 10
             rolls = ClampRolls(rolls);
@@ -35,29 +38,14 @@ namespace ConsoleBowling
                 //add the roll score to the current frame
                 frames[currentFrame] += rolls[i];
 
-                if (rolls[i] == 10) //Strike!
+                if (StrikeHandled(i))
                 {
-                    //add the next two rolls as bonus points, if they exist
-                    if (rolls.Length > i + 2)
-                    {
-                        frames[currentFrame] += rolls[i + 1] + rolls[i + 2];
-                    }
-                    
                     AdvanceFrame();
                     continue;
                 }
 
-                if (ball == 2)
+                if (SpareHandled(i))
                 {
-                    if ((rolls[i] + rolls[i-1]) == 10) //Spare!
-                    {
-                        //add the next roll as bonus point, if it exists
-                        if (rolls.Length > i + 1)
-                        {
-                            frames[currentFrame] += rolls[i + 1];
-                        }
-                    }
-
                     AdvanceFrame();
                     continue;
                 }
@@ -85,6 +73,41 @@ namespace ConsoleBowling
             }
 
             return rolls;
+        }
+
+        private bool StrikeHandled(int rollIndex)
+        {
+            if (rolls[rollIndex] == 10)
+            {
+                //add the next two rolls as bonus points, if they exist
+                if (rolls.Length > rollIndex + 2)
+                {
+                    frames[currentFrame] += rolls[rollIndex + 1] + rolls[rollIndex + 2];
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool SpareHandled(int rollIndex)
+        {
+            if (ball == 2)
+            {
+                if ((rolls[rollIndex] + rolls[rollIndex - 1]) == 10)
+                {
+                    //add the next roll as bonus point, if it exists
+                    if (rolls.Length > rollIndex + 1)
+                    {
+                        frames[currentFrame] += rolls[rollIndex + 1];
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
