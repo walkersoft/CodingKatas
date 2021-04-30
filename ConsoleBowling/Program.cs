@@ -1,15 +1,14 @@
 ﻿using ConsoleBowling;
 using System;
+using System.Collections.Generic;
 
-var scorer = new ScoringCalculator();
-int[] rolls = { 2, 4 };
-int[] frames = scorer.CalculateScore(rolls);
+Console.Clear();
+ScoringCalculator scorer = new();
 
 //game state vars
 string[] displayFrames = new string[11];
 string[] displayRolls = new string[21];
-int[] gameFrames;
-int currentRollScore;
+List<int> gameRolls = new();
 
 for (int i = 0; i < displayRolls.GetLength(0); i++)
 {
@@ -21,11 +20,23 @@ for (int i = 0; i < displayFrames.Length; i++)
     displayFrames[i] = "0";
 }
 
-DrawScoreboard(displayRolls, displayFrames);
-Console.Write("Next score: ");
-Console.ReadKey();
 
-static void DrawScoreboard(string[] displayRolls, string[] displayFrames)
+int displayRollsIndex = 0;
+do
+{
+    Console.SetCursorPosition(0, 0);
+    DrawScoreboard(gameRolls.ToArray(), displayRolls, displayFrames);
+    int inputScore = GetInput();
+
+    gameRolls.Add(inputScore);
+    displayRolls[displayRollsIndex++] = inputScore.ToString();
+
+}
+while (true);
+
+
+
+static void DrawScoreboard(int[] gameRolls, string[] displayRolls, string[] displayFrames)
 {
     DrawBorder();
     Console.Write("|");
@@ -67,4 +78,33 @@ static void DrawBorder()
         Console.Write("----+");
     }
     Console.WriteLine();
+}
+
+static int GetInput()
+{
+    (int col, int line) = Console.GetCursorPosition();
+    int score;
+
+    while (true)
+    {
+        Console.Write("Next ball score: ");
+        string input = Console.ReadLine();
+        if (int.TryParse(input.Trim(), out score))
+        {
+            score = Math.Clamp(score, 0, 10);
+            ClearLine(line);
+            break;
+        }
+
+        ClearLine(line);
+    }
+
+    return score;
+}
+
+static void ClearLine(int line)
+{
+    Console.SetCursorPosition(0, line);
+    Console.Write(string.Format("{0,80}", " "));
+    Console.SetCursorPosition(0, line);
 }
