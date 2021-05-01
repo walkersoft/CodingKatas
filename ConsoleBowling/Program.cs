@@ -41,12 +41,17 @@ do
         displayFrames[i] = frames[i].ToString();
     }
 
-    if (ballIndex == 0 && scorer.LastScoreWasStrike)
+    if (ballIndex == 0)
     {
-        displayFrameRolls[displayFrameRollsIndex, ballIndex] = "X";
-        displayFrameRolls[displayFrameRollsIndex, ballIndex + 1] = " ";
-        displayFrameRollsIndex++;
-        continue;
+        if (scorer.LastScoreWasStrike)
+        {
+            displayFrameRolls[displayFrameRollsIndex, ballIndex] = "X";
+            displayFrameRolls[displayFrameRollsIndex, ballIndex + 1] = " ";
+            displayFrameRollsIndex++;
+            continue;
+        }
+
+        displayFrameRolls[displayFrameRollsIndex, ballIndex] = inputScore.ToString();
     }
     
     if (ballIndex == 1)
