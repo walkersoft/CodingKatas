@@ -11,7 +11,7 @@ int displayFrameRollsIndex = 0;
 string[] displayFrames = new string[11];
 List<int> gameRolls = new();
 int ballIndex = 0;
-int lastInputScore = 0;
+
 
 for (int i = 0; i < displayFrameRolls.GetLength(0); i++)
 {
@@ -34,32 +34,43 @@ do
 
 
     gameRolls.Add(inputScore);
-    if (ballIndex == 0 && inputScore == 10)
+    var frames = scorer.CalculateScore(gameRolls.ToArray());
+
+    for (int i = 0; i < frames.Length; i++)
     {
-        displayFrameRolls[displayFrameRollsIndex, ballIndex] = "X";
-        ballIndex++;
-        displayFrameRolls[displayFrameRollsIndex, ballIndex] = " ";
-    }
-    else if (ballIndex == 1 && inputScore + lastInputScore >= 10)
-    {
-        displayFrameRolls[displayFrameRollsIndex, ballIndex] = "/";
-    }
-    else
-    {
-        displayFrameRolls[displayFrameRollsIndex, ballIndex] = inputScore.ToString();
-        lastInputScore = inputScore;
+        displayFrames[i] = frames[i].ToString();
     }
 
+    if (ballIndex == 0 && scorer.LastScoreWasStrike)
+    {
+        displayFrameRolls[displayFrameRollsIndex, ballIndex] = "X";
+        displayFrameRolls[displayFrameRollsIndex, ballIndex + 1] = " ";
+        displayFrameRollsIndex++;
+        continue;
+    }
+    
     if (ballIndex == 1)
     {
-        lastInputScore = 0;
-        displayFrameRollsIndex++;
-        ballIndex--;
+        if (scorer.LastScoreWasSpare)
+        {
+            displayFrameRolls[displayFrameRollsIndex, ballIndex] = "/";
+        }
+        else
+        {
+            displayFrameRolls[displayFrameRollsIndex, ballIndex] = inputScore.ToString();
+        }
+    
+        if (displayFrameRollsIndex < 9)
+        {
+            displayFrameRollsIndex++;
+            ballIndex--;
+        }
+
         continue;
     }
 
-
     ballIndex++;
+    
 }
 while (true);
 
@@ -134,3 +145,5 @@ static void ClearLine(int line)
     Console.Write(string.Format("{0,80}", " "));
     Console.SetCursorPosition(0, line);
 }
+
+delegate void HandleFrame(int inputScore, ref int lastInputScore, ref int displayFrameRollsIndex, ref int ballIndex, ref string[,] displayFrameRolls);

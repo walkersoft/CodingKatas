@@ -8,21 +8,29 @@ namespace ConsoleBowling
 {
     public class ScoringCalculator
     {
-        private int currentFrame = 0;
-        private int ball = 1;
+        private int currentFrame;
+        private int ball;
         private int[] rolls;
         private int[] frames;
+
+        public bool LastScoreWasStrike { get; private set; }
+        public bool LastScoreWasSpare { get; private set; }
 
         public int[] CalculateScore(int[] incomingRolls)
         {
             rolls = incomingRolls;
             frames = new int[11];
+            currentFrame = 0;
+            ball = 1;
 
-            //any roll can never be more than 10
+            //clamp values between 0 and 10
             rolls = ClampRolls(rolls);
 
             for (int i = 0; i < rolls.Length; i++)
             {
+                LastScoreWasStrike = false;
+                LastScoreWasSpare = false;
+
                 if (currentFrame == 10) 
                 {
                     //Game Over - all frames counted
@@ -40,11 +48,19 @@ namespace ConsoleBowling
 
                 if (StrikeHandled(i))
                 {
+                    LastScoreWasStrike = true;
                     AdvanceFrame();
                     continue;
                 }
 
                 if (SpareHandled(i))
+                {
+                    LastScoreWasSpare = true;
+                    AdvanceFrame();
+                    continue;
+                }
+
+                if (ball == 2)
                 {
                     AdvanceFrame();
                     continue;
@@ -77,7 +93,7 @@ namespace ConsoleBowling
 
         private bool StrikeHandled(int rollIndex)
         {
-            if (rolls[rollIndex] == 10)
+            if (ball == 1 && rolls[rollIndex] == 10)
             {
                 //add the next two rolls as bonus points, if they exist
                 if (rolls.Length > rollIndex + 2)
@@ -93,15 +109,12 @@ namespace ConsoleBowling
 
         private bool SpareHandled(int rollIndex)
         {
-            if (ball == 2)
+            if (ball == 2 && (rolls[rollIndex] + rolls[rollIndex - 1]) == 10)
             {
-                if ((rolls[rollIndex] + rolls[rollIndex - 1]) == 10)
+                //add the next roll as bonus point, if it exists
+                if (rolls.Length > rollIndex + 1)
                 {
-                    //add the next roll as bonus point, if it exists
-                    if (rolls.Length > rollIndex + 1)
-                    {
-                        frames[currentFrame] += rolls[rollIndex + 1];
-                    }
+                    frames[currentFrame] += rolls[rollIndex + 1];
                 }
 
                 return true;

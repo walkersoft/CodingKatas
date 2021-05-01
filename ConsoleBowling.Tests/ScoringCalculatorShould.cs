@@ -168,5 +168,42 @@ namespace ConsoleBowling.Tests
             Assert.Equal(10, frames[1]);
             Assert.Equal(15, frames[10]);
         }
+
+        [Fact]
+        public void ReportIsLastScoreIsStrikeMark()
+        {
+            int[] rolls = { 10 };
+            int[] frames = scorer.CalculateScore(rolls);
+
+            Assert.True(scorer.LastScoreWasStrike);
+        }
+
+        [Fact]
+        public void ReportIsLastScoreIsNotStrikeMark()
+        {
+            int[] rolls = { 5, 2 };
+            int[] frames = scorer.CalculateScore(rolls);
+
+            Assert.False(scorer.LastScoreWasStrike);
+        }
+
+        [Fact]
+        public void ReportIsLastScoreIsSpareMark()
+        {
+            int[] rolls = { 5, 5 };
+            int[] frames = scorer.CalculateScore(rolls);
+
+            Assert.True(scorer.LastScoreWasSpare);
+        }
+
+        [Fact]
+        public void ReportIsLastScoreIsNotSpareMark()
+        {
+            int[] rolls = { 10 };
+            int[] frames = scorer.CalculateScore(rolls);
+
+            Assert.True(scorer.LastScoreWasStrike);
+        }
     }
 }
+
