@@ -6,13 +6,19 @@ Console.Clear();
 ScoringCalculator scorer = new();
 
 //game state vars
+string[,] displayFrameRolls = new string[10, 3];
+int displayFrameRollsIndex = 0;
 string[] displayFrames = new string[11];
-string[] displayRolls = new string[21];
 List<int> gameRolls = new();
+int ballIndex = 0;
+int lastInputScore = 0;
 
-for (int i = 0; i < displayRolls.GetLength(0); i++)
+for (int i = 0; i < displayFrameRolls.GetLength(0); i++)
 {
-    displayRolls[i] = "0";
+    for (int j = 0; j < displayFrameRolls.GetLength(1); j++)
+    {
+        displayFrameRolls[i, j] = "0";
+    }
 }
 
 for (int i = 0; i < displayFrames.Length; i++)
@@ -20,23 +26,44 @@ for (int i = 0; i < displayFrames.Length; i++)
     displayFrames[i] = "0";
 }
 
-
-int displayRollsIndex = 0;
 do
 {
     Console.SetCursorPosition(0, 0);
-    DrawScoreboard(gameRolls.ToArray(), displayRolls, displayFrames);
+    DrawScoreboard(gameRolls.ToArray(), displayFrameRolls, displayFrames);
     int inputScore = GetInput();
 
-    gameRolls.Add(inputScore);
-    displayRolls[displayRollsIndex++] = inputScore.ToString();
 
+    gameRolls.Add(inputScore);
+    if (ballIndex == 0 && inputScore == 10)
+    {
+        displayFrameRolls[displayFrameRollsIndex, ballIndex] = "X";
+        ballIndex++;
+        displayFrameRolls[displayFrameRollsIndex, ballIndex] = " ";
+    }
+    else if (ballIndex == 1 && inputScore + lastInputScore >= 10)
+    {
+        displayFrameRolls[displayFrameRollsIndex, ballIndex] = "/";
+    }
+    else
+    {
+        displayFrameRolls[displayFrameRollsIndex, ballIndex] = inputScore.ToString();
+        lastInputScore = inputScore;
+    }
+
+    if (ballIndex == 1)
+    {
+        lastInputScore = 0;
+        displayFrameRollsIndex++;
+        ballIndex--;
+        continue;
+    }
+
+
+    ballIndex++;
 }
 while (true);
 
-
-
-static void DrawScoreboard(int[] gameRolls, string[] displayRolls, string[] displayFrames)
+static void DrawScoreboard(int[] gameRolls, string[,] displayRolls, string[] displayFrames)
 {
     DrawBorder();
     Console.Write("|");
@@ -52,14 +79,14 @@ static void DrawScoreboard(int[] gameRolls, string[] displayRolls, string[] disp
     DrawBorder();
 }
 
-static void DrawScores(string[] displayRolls, string[] displayFrames)
+static void DrawScores(string[,] displayRolls, string[] displayFrames)
 {
     Console.Write("|");
     for (int i = 0; i < 9; i++)
     {
-        Console.Write(string.Format("{0} {1} |", displayRolls[i], displayRolls[i + 1]));
+        Console.Write(string.Format("{0} {1} |", displayRolls[i, 0], displayRolls[i, 1]));
     }
-    Console.Write(string.Format("{0} {1}{2}|", displayRolls[18], displayRolls[19], displayRolls[20]));
+    Console.Write(string.Format("{0} {1}{2}|", displayRolls[9, 0], displayRolls[9, 1], displayRolls[9, 2]));
     Console.WriteLine();
     DrawBorder();
     Console.Write("|");
@@ -88,8 +115,7 @@ static int GetInput()
     while (true)
     {
         Console.Write("Next ball score: ");
-        string input = Console.ReadLine();
-        if (int.TryParse(input.Trim(), out score))
+        if (int.TryParse(Console.ReadLine().Trim(), out score))
         {
             score = Math.Clamp(score, 0, 10);
             ClearLine(line);
