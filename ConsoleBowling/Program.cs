@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 
-Console.Clear();
 ScoringCalculator scorer = new();
 GameUI ui = new();
 
@@ -15,18 +14,9 @@ int ballIndex = 0;
 int[] frames = new int[11];
 
 
-for (int i = 0; i < displayFrameRolls.GetLength(0); i++)
-{
-    for (int j = 0; j < displayFrameRolls.GetLength(1); j++)
-    {
-        displayFrameRolls[i, j] = "0";
-    }
-}
 
-for (int i = 0; i < displayFrames.Length; i++)
-{
-    displayFrames[i] = "0";
-}
+InitGameState(ref displayFrameRolls, ref displayFrames);
+Console.Clear();
 
 do
 {
@@ -44,9 +34,11 @@ do
     gameRolls.Add(inputScore);
     frames = scorer.CalculateScore(gameRolls.ToArray());
 
+    int runningTotal = 0;
     for (int i = 0; i < frames.Length; i++)
     {
-        displayFrames[i] = frames[i].ToString();
+        runningTotal += frames[i];
+        displayFrames[i] = frames[i] == 0 ? frames[i].ToString() : runningTotal.ToString();
     }
 
     if (displayFrameRollsIndex < 9)
@@ -119,3 +111,19 @@ do
 while (true);
 
 Console.WriteLine(string.Format("Game concluded. Total Score: {0}", frames[10]));
+
+static void InitGameState(ref string[,] displayFrameRolls, ref string[] displayFrames)
+{
+    for (int i = 0; i < displayFrameRolls.GetLength(0); i++)
+    {
+        for (int j = 0; j < displayFrameRolls.GetLength(1); j++)
+        {
+            displayFrameRolls[i, j] = "0";
+        }
+    }
+
+    for (int i = 0; i < displayFrames.Length; i++)
+    {
+        displayFrames[i] = "0";
+    }
+}
