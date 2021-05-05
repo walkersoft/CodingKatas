@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 Console.Clear();
 ScoringCalculator scorer = new();
+GameUI ui = new();
 
 //game state vars
 string[,] displayFrameRolls = new string[10, 3];
