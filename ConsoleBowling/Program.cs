@@ -24,14 +24,16 @@ bool moveRight = true;
 
 static (int,bool) MoveBar(int pos, bool moveRight)
 {
-    string bar = "<          >";
+    string foo = "      V      ";
+    string bar = "<           >";
     pos = moveRight ? ++pos : --pos;
     bar = bar.Remove(pos, 1).Insert(pos, "=");
+    Console.SetCursorPosition(0, 0);
+    Console.WriteLine(foo);
     Console.Write($"{bar} ({pos})  ");
     bar = bar.Remove(pos, 1).Insert(pos, " ");
-    if (pos >= 10) moveRight = false;
+    if (pos >= 11) moveRight = false;
     if (pos <= 1) moveRight = true;
-    Console.SetCursorPosition(0, 0);
 
     return (pos, moveRight);
 }
@@ -40,10 +42,10 @@ var timer = new System.Timers.Timer();
 timer.Interval = 100;
 timer.Elapsed += (o, e) => { (pos, moveRight) = MoveBar(pos, moveRight); };
 timer.Start();
+Console.CursorVisible = false;
 
 while (true)
 {
-    Console.CursorVisible = false;
     var key = Console.ReadKey(true);
     if (key.Key == ConsoleKey.Enter)
     {
