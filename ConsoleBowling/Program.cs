@@ -1,6 +1,7 @@
 ﻿using ConsoleBowling;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 
 ScoringCalculator scorer = new();
@@ -22,25 +23,39 @@ Console.Clear();
 int pos = 0;
 bool moveRight = true;
 
-static (int,bool) MoveBar(int pos, bool moveRight)
+static (int, bool) MoveBar(StringBuilder spinner, int pos, bool moveRight)
 {
-    string foo = "      V      ";
-    string bar = "<           >";
     pos = moveRight ? ++pos : --pos;
-    bar = bar.Remove(pos, 1).Insert(pos, "=");
+    spinner = spinner.Remove(pos, 1).Insert(pos, "=");
     Console.SetCursorPosition(0, 0);
-    Console.WriteLine(foo);
-    Console.Write($"{bar} ({pos})  ");
-    bar = bar.Remove(pos, 1).Insert(pos, " ");
-    if (pos >= 11) moveRight = false;
+    Console.Write($"{spinner} ({pos})  ");
+    spinner = spinner.Remove(pos, 1).Insert(pos, " ");
+    if (pos >= spinner.Length - 2) moveRight = false; //deduction accounts for chars on the end
     if (pos <= 1) moveRight = true;
 
     return (pos, moveRight);
 }
 
+static StringBuilder GetSpinner(int maxPins, int multiplier)
+{
+    int spinnerSize = (1 + multiplier) * (maxPins - 1) + 1;
+    int halfSpinnerSize = (spinnerSize - 1) / 2;
+    int targetPos = maxPins + 1;
+    
+    var spinner = new StringBuilder();
+    spinner.Append('<')
+        .Append('-', halfSpinnerSize)
+        .Append('V')
+        .Append('-', halfSpinnerSize)
+        .Append('>');
+
+    return spinner;
+}
+
+var spinner = GetSpinner(10, 4);
 var timer = new System.Timers.Timer();
 timer.Interval = 100;
-timer.Elapsed += (o, e) => { (pos, moveRight) = MoveBar(pos, moveRight); };
+timer.Elapsed += (o, e) => { (pos, moveRight) = MoveBar(spinner, pos, moveRight); };
 timer.Start();
 Console.CursorVisible = false;
 
