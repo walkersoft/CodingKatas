@@ -6,6 +6,7 @@ using System.Threading;
 
 ScoringCalculator scorer = new();
 GameUI ui = new();
+BallScoreSpinner spinner = new();
 
 //game state vars
 string[,] displayFrameRolls = new string[10, 3];
@@ -21,81 +22,8 @@ int[] scoreZones;
 //InitGameState(ref displayFrameRolls, ref displayFrames);
 Console.Clear();
 
-int pos = 0;
-bool moveRight = true;
+spinner.StartSpinner();
 
-static (int, bool) MoveBar(StringBuilder spinner, int pos, bool moveRight, int[] scoreZones)
-{
-    pos = moveRight ? ++pos : --pos;
-    spinner = spinner.Remove(pos, 1).Insert(pos, "=");
-    Console.SetCursorPosition(0, 0);
-    Console.Write($"{spinner} ({scoreZones[pos - 1]})  ");
-    spinner = spinner.Remove(pos, 1).Insert(pos, " ");
-    if (pos >= spinner.Length - 2) moveRight = false; //deduction accounts for chars on the end
-    if (pos <= 1) moveRight = true;
-
-    return (pos, moveRight);
-}
-
-static StringBuilder GetSpinner(int maxPins, int multiplier)
-{
-    //int spinnerSize = multiplier * (maxPins - 1) + 1;
-    int halfSpinnerSize = multiplier * (maxPins - 1);
-    //int halfSpinnerSize = (spinnerSize - 1) / 2;
-    int targetPos = maxPins + 1;
-    
-    var spinner = new StringBuilder();
-    spinner.Append('<')
-        .Append('-', halfSpinnerSize)
-        .Append('V')
-        .Append('-', halfSpinnerSize)
-        .Append('>');
-
-    return spinner;
-}
-
-static int[] BuildScoreZones(int maxPins, int multiplier)
-{
-    int[] halfZone = new int[(maxPins - 1) * multiplier];
-    int lastIndex = 0;
-    for (int i = 1; i < maxPins; i++)
-    {
-        for (int j = 0; j < multiplier; j++, lastIndex++)
-        {
-            halfZone[lastIndex] = i;
-        }
-    }
-
-    int[] scoreZones = new int[(halfZone.Length * 2) + 1];
-    halfZone.CopyTo(scoreZones, 0);
-    Array.Reverse(halfZone);
-    halfZone.CopyTo(scoreZones, halfZone.Length + 1);
-    scoreZones[halfZone.Length] = maxPins;
-
-    return scoreZones;
-}
-
-int maxPins = 7;
-int multiplier = 3;
-
-scoreZones = BuildScoreZones(maxPins, multiplier);
-var spinner = GetSpinner(maxPins, multiplier);
-var timer = new System.Timers.Timer();
-timer.Interval = 200;
-timer.Elapsed += (o, e) => { (pos, moveRight) = MoveBar(spinner, pos, moveRight, scoreZones); };
-timer.Start();
-Console.CursorVisible = false;
-
-while (true)
-{
-    var key = Console.ReadKey(true);
-    if (key.Key == ConsoleKey.Enter)
-    {
-        Console.WriteLine();
-        Console.WriteLine(pos);
-        break;
-    }
-}
 
 //do
 //{
