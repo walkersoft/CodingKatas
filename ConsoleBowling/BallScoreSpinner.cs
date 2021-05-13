@@ -15,7 +15,7 @@ namespace ConsoleBowling
         int maxPins;
         int spinnerPos = 0;
         int[] scoreZones;
-        StringBuilder spinner;
+        StringBuilder spinner, indicator;
         Timer timer;
 
         public int Interval
@@ -75,6 +75,7 @@ namespace ConsoleBowling
             spinner = spinner.Remove(spinnerPos, 1).Insert(spinnerPos, "=");
             //need to fix this line so cursor position can be dynamic
             Console.SetCursorPosition(0, 0);
+            Console.WriteLine(indicator.ToString());
             Console.Write($"{spinner} ({scoreZones[spinnerPos - 1]})  ");
             spinner = spinner.Remove(spinnerPos, 1).Insert(spinnerPos, " ");
             if (spinnerPos >= spinner.Length - 2) movingRight = false; //deduction accounts for chars at either end
@@ -104,12 +105,17 @@ namespace ConsoleBowling
         {
             int halfSpinnerSize = ZoneMultiplier * (MaxPins - 1);
 
+            indicator = new StringBuilder();
+            indicator.Append('|')
+                .Append(' ', halfSpinnerSize)
+                .Append(MaxPins == 10 ? 'X' : '/')
+                .Append(' ', halfSpinnerSize)
+                .Append('|');
+
             spinner = new StringBuilder();
-            spinner.Append('<')
-                .Append('-', halfSpinnerSize)
-                .Append('V')
-                .Append('-', halfSpinnerSize)
-                .Append('>');
+            spinner.Append('|')
+                .Append(' ', halfSpinnerSize * 2 + 1)
+                .Append('|');
         }
     }
 }
