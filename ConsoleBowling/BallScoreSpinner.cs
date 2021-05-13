@@ -73,6 +73,8 @@ namespace ConsoleBowling
                 var key = Console.ReadKey(true);
                 if (key.Key == ConsoleKey.Enter && spinnerPos > 0)
                 {
+                    //spinnerPos check is needed in case user hits key before 
+                    //spinner had a chance to progress to a valid score zone
                     timer.Stop();
                     timer.Elapsed -= (o, e) => ProgressSpinner();
                     return scoreZones[spinnerPos - 1];                    
