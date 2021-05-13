@@ -8,6 +8,13 @@ namespace ConsoleBowling
 {
     public class GameUI
     {
+        private BallScoreSpinner spinner;
+
+        public GameUI(BallScoreSpinner spinner)
+        {
+            this.spinner = spinner;
+        }
+
         public void DrawScoreboard(int[] gameRolls, string[,] displayRolls, string[] displayFrames)
         {
             Console.SetCursorPosition(0, 0);
@@ -56,22 +63,25 @@ namespace ConsoleBowling
         public int GetInput()
         {
             (int col, int line) = Console.GetCursorPosition();
-            int score;
 
             while (true)
             {
-                Console.Write("Next ball score: ");
-                if (int.TryParse(Console.ReadLine().Trim(), out score))
-                {
-                    score = Math.Clamp(score, 0, 10);
-                    ClearLine(line);
-                    break;
-                }
+                //Console.Write("Next ball score: ");
+                //if (int.TryParse(Console.ReadLine().Trim(), out score))
+                //{
+                //    score = Math.Clamp(score, 0, 10);
+                //    ClearLine(line);
+                //    break;
+                //}
 
+                //ClearLine(line);
+
+                spinner.DisplayColumn = col;
+                spinner.DisplayRow = line;
                 ClearLine(line);
+                ClearLine(line + 1);
+                return spinner.StartSpinner();
             }
-
-            return score;
         }
 
         private void ClearLine(int line)

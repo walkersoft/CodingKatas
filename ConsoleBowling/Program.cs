@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading;
 
 ScoringCalculator scorer = new();
-GameUI ui = new();
 BallScoreSpinner spinner = new();
+GameUI ui = new(spinner);
 
 //game state vars
 string[,] displayFrameRolls = new string[10, 3];
@@ -15,122 +15,129 @@ string[] displayFrames = new string[11];
 List<int> gameRolls = new();
 int ballIndex = 0;
 int[] frames = new int[11];
-int[] scoreZones;
 
 
 
-//InitGameState(ref displayFrameRolls, ref displayFrames);
+InitGameState(ref displayFrameRolls, ref displayFrames);
 Console.Clear();
 
-spinner.StartSpinner();
+
+do
+{
+    Console.SetCursorPosition(0, 0);
+    ui.DrawScoreboard(gameRolls.ToArray(), displayFrameRolls, displayFrames);
+
+    if (ballIndex == 3)
+    {
+        break;
+    }
+
+    int inputScore = ui.GetInput();
 
 
-//do
-//{
-//    Console.SetCursorPosition(0, 0);
-//    ui.DrawScoreboard(gameRolls.ToArray(), displayFrameRolls, displayFrames);
+    gameRolls.Add(inputScore);
+    frames = scorer.CalculateScore(gameRolls.ToArray());
 
-//    if (ballIndex == 3)
-//    {
-//        break;
-//    }
+    int runningTotal = 0;
+    for (int i = 0; i < frames.Length; i++)
+    {
+        runningTotal += frames[i];
+        displayFrames[i] = frames[i] == 0 ? frames[i].ToString() : runningTotal.ToString();
+    }
 
-//    int inputScore = ui.GetInput();
+    if (displayFrameRollsIndex < 9)
+    {
+        if (ballIndex == 0)
+        {
+            if (scorer.LastScoreWasStrike)
+            {
+                displayFrameRolls[displayFrameRollsIndex, ballIndex] = "X";
+                displayFrameRolls[displayFrameRollsIndex, ballIndex + 1] = " ";
+                displayFrameRollsIndex++;
+                spinner.MaxPins = 10;
+                continue;
+            }
 
+            if (displayFrameRollsIndex > 9)
+            {
+                displayFrameRollsIndex = 9;
+            }
 
-//    gameRolls.Add(inputScore);
-//    frames = scorer.CalculateScore(gameRolls.ToArray());
+            spinner.MaxPins = 10 - inputScore;
+            displayFrameRolls[displayFrameRollsIndex, ballIndex] = inputScore.ToString();
+        }
 
-//    int runningTotal = 0;
-//    for (int i = 0; i < frames.Length; i++)
-//    {
-//        runningTotal += frames[i];
-//        displayFrames[i] = frames[i] == 0 ? frames[i].ToString() : runningTotal.ToString();
-//    }
+        if (ballIndex == 1)
+        {
+            if (scorer.LastScoreWasSpare)
+            {
+                displayFrameRolls[displayFrameRollsIndex, ballIndex] = "/";
+            }
+            else
+            {
+                displayFrameRolls[displayFrameRollsIndex, ballIndex] = inputScore.ToString();
+            }
 
-//    if (displayFrameRollsIndex < 9)
-//    {
-//        if (ballIndex == 0)
-//        {
-//            if (scorer.LastScoreWasStrike)
-//            {
-//                displayFrameRolls[displayFrameRollsIndex, ballIndex] = "X";
-//                displayFrameRolls[displayFrameRollsIndex, ballIndex + 1] = " ";
-//                displayFrameRollsIndex++;
-//                continue;
-//            }
+            if (displayFrameRollsIndex < 9)
+            {
+                displayFrameRollsIndex++;
+                ballIndex--;
+            }
+            
+            spinner.MaxPins = 10;
+            continue;
+        }
 
-//            if (displayFrameRollsIndex > 9)
-//            {
-//                displayFrameRollsIndex = 9;
-//            }
+        ballIndex++;
+        continue;
+    }
 
-//            displayFrameRolls[displayFrameRollsIndex, ballIndex] = inputScore.ToString();
-//        }
+    if (displayFrameRollsIndex == 9)
+    {
 
-//        if (ballIndex == 1)
-//        {
-//            if (scorer.LastScoreWasSpare)
-//            {
-//                displayFrameRolls[displayFrameRollsIndex, ballIndex] = "/";
-//            }
-//            else
-//            {
-//                displayFrameRolls[displayFrameRollsIndex, ballIndex] = inputScore.ToString();
-//            }
+        if (inputScore == 10)
+        {
+            displayFrameRolls[displayFrameRollsIndex, ballIndex] = "X";
+            ballIndex++;
+            spinner.MaxPins = 10;
+            continue;
+        }
+        else
+        {
+            spinner.MaxPins = 10 - inputScore;
+        }
 
-//            if (displayFrameRollsIndex < 9)
-//            {
-//                displayFrameRollsIndex++;
-//                ballIndex--;
-//            }
+        if ((ballIndex == 1 || ballIndex == 2) && (inputScore + gameRolls[^2] == 10))
+        {
+            displayFrameRolls[displayFrameRollsIndex, ballIndex] = "/";
+            ballIndex++;
+            spinner.MaxPins = 10;
+            continue;
+        }
 
-//            continue;
-//        }
+        displayFrameRolls[displayFrameRollsIndex, ballIndex] = inputScore.ToString();
 
-//        ballIndex++;
-//        continue;
-//    }
+        ballIndex++;
 
-//    if (displayFrameRollsIndex == 9)
-//    {
+    }
+}
+while (true);
 
-//        if (inputScore == 10)
-//        {
-//            displayFrameRolls[displayFrameRollsIndex, ballIndex] = "X";
-//            ballIndex++;
-//            continue;
-//        }
+Console.WriteLine();
+Console.WriteLine(string.Format("Game concluded. Total Score: {0}", frames[10]));
 
-//        if ((ballIndex == 1 || ballIndex == 2) && (inputScore + gameRolls[^2] == 10))
-//        {
-//            displayFrameRolls[displayFrameRollsIndex, ballIndex] = "/";
-//            ballIndex++;
-//            continue;
-//        }
+static void InitGameState(ref string[,] displayFrameRolls, ref string[] displayFrames)
+{
+    for (int i = 0; i < displayFrameRolls.GetLength(0); i++)
+    {
+        for (int j = 0; j < displayFrameRolls.GetLength(1); j++)
+        {
+            displayFrameRolls[i, j] = "0";
+        }
+    }
 
-//        displayFrameRolls[displayFrameRollsIndex, ballIndex] = inputScore.ToString();
-
-//        ballIndex++;      
-
-//    }    
-//}
-//while (true);
-
-//Console.WriteLine(string.Format("Game concluded. Total Score: {0}", frames[10]));
-
-//static void InitGameState(ref string[,] displayFrameRolls, ref string[] displayFrames)
-//{
-//    for (int i = 0; i < displayFrameRolls.GetLength(0); i++)
-//    {
-//        for (int j = 0; j < displayFrameRolls.GetLength(1); j++)
-//        {
-//            displayFrameRolls[i, j] = "0";
-//        }
-//    }
-
-//    for (int i = 0; i < displayFrames.Length; i++)
-//    {
-//        displayFrames[i] = "0";
-//    }
-//}
+    for (int i = 0; i < displayFrames.Length; i++)
+    {
+        displayFrames[i] = "0";
+    }
+}

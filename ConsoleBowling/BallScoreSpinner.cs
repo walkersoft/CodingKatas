@@ -18,6 +18,9 @@ namespace ConsoleBowling
         StringBuilder spinner, indicator;
         Timer timer;
 
+        public int DisplayColumn { get; set; }
+        public int DisplayRow { get; set; }
+
         public int Interval
         {
             get => interval;
@@ -43,7 +46,7 @@ namespace ConsoleBowling
             Interval = 200;
         }        
 
-        public void StartSpinner()
+        public int StartSpinner()
         {
             BuildScoreZones();
             BuildSpinner();
@@ -52,19 +55,27 @@ namespace ConsoleBowling
             timer.Interval = Interval;
             timer.Elapsed += (o, e) => ProgressSpinner();
             timer.Start();
-            ReadUserInput();
+
+            //input from user determines score
+            int roll = ReadUserInput();
+
+            //reset spinner
+            spinnerPos = 0;
+            movingRight = true;
+
+            return roll;
         }
 
-        private void ReadUserInput()
+        private int ReadUserInput()
         {
             while (true)
             {
                 var key = Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Enter)
+                if (key.Key == ConsoleKey.Enter && spinnerPos > 0)
                 {
-                    Console.WriteLine();
-                    Console.WriteLine(scoreZones[spinnerPos - 1]);
-                    break;
+                    timer.Stop();
+                    timer.Elapsed -= (o, e) => ProgressSpinner();
+                    return scoreZones[spinnerPos - 1];                    
                 }
             }
         }
@@ -73,11 +84,12 @@ namespace ConsoleBowling
         {
             spinnerPos = movingRight ? ++spinnerPos : --spinnerPos;
             spinner = spinner.Remove(spinnerPos, 1).Insert(spinnerPos, "=");
-            //need to fix this line so cursor position can be dynamic
-            Console.SetCursorPosition(0, 0);
+            
+            Console.SetCursorPosition(DisplayColumn, DisplayRow);
             Console.WriteLine(indicator.ToString());
             Console.Write($"{spinner} ({scoreZones[spinnerPos - 1]})  ");
             spinner = spinner.Remove(spinnerPos, 1).Insert(spinnerPos, " ");
+            
             if (spinnerPos >= spinner.Length - 2) movingRight = false; //deduction accounts for chars at either end
             if (spinnerPos <= 1) movingRight = true;
         }
