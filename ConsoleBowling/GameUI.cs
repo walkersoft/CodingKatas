@@ -62,6 +62,8 @@ namespace ConsoleBowling
 
         public int GetInput()
         {
+            Console.WriteLine();
+            Console.WriteLine("Press <Enter> to bowl...");
             (int col, int line) = Console.GetCursorPosition();
 
             while (true)
