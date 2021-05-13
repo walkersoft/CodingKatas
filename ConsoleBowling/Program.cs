@@ -117,6 +117,16 @@ do
 
         displayFrameRolls[displayFrameRollsIndex, ballIndex] = inputScore.ToString();
 
+        if (ballIndex == 1)
+        {
+            if (gameRolls[^1] + gameRolls[^2] < 10)
+            {
+                //10th frame, ball 2, and no spare - game over time
+                ballIndex = 3;
+                continue;
+            }
+        }
+
         ballIndex++;
 
     }
