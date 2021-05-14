@@ -36,14 +36,33 @@ namespace ConsoleBowling
         public int MaxPins 
         { 
             get => maxPins; 
-            set => maxPins = Math.Clamp(value, 1, 10); 
+            set
+            {
+                maxPins = Math.Clamp(value, 1, 10);
+
+                if (maxPins < 11)
+                {
+                    ZoneMultiplier = 1;
+                    Interval = 35;
+                }
+
+                if (maxPins < 4)
+                {
+                    ZoneMultiplier = 2;
+                    Interval = 47;
+                }
+
+                if (maxPins < 2)
+                {
+                    ZoneMultiplier = 3;
+                    Interval = 49;
+                }
+            }
         }
 
         public BallScoreSpinner()
         {
             MaxPins = 10;
-            ZoneMultiplier = 1;
-            Interval = 100;
         }        
 
         public int StartSpinner()

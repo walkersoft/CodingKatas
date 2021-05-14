@@ -5,12 +5,7 @@ using System.Text;
 using System.Threading;
 
 ScoringCalculator scorer = new();
-BallScoreSpinner spinner = new()
-{
-    Interval = 45,
-    MaxPins = 10,
-    ZoneMultiplier = 2
-};
+BallScoreSpinner spinner = new();
 
 GameUI ui = new(spinner);
 
@@ -30,7 +25,6 @@ Console.Clear();
 
 do
 {
-    Console.SetCursorPosition(0, 0);
     ui.DrawScoreboard(gameRolls.ToArray(), displayFrameRolls, displayFrames);
 
     if (ballIndex == 3)
@@ -141,6 +135,7 @@ while (true);
 
 Console.WriteLine();
 Console.WriteLine(string.Format("Game concluded. Total Score: {0}", frames[10]));
+Console.WriteLine();
 
 static void InitGameState(ref string[,] displayFrameRolls, ref string[] displayFrames)
 {
