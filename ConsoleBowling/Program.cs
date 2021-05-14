@@ -5,7 +5,13 @@ using System.Text;
 using System.Threading;
 
 ScoringCalculator scorer = new();
-BallScoreSpinner spinner = new();
+BallScoreSpinner spinner = new()
+{
+    Interval = 45,
+    MaxPins = 10,
+    ZoneMultiplier = 2
+};
+
 GameUI ui = new(spinner);
 
 //game state vars

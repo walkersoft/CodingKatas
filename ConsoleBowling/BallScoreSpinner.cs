@@ -43,7 +43,7 @@ namespace ConsoleBowling
         {
             MaxPins = 10;
             ZoneMultiplier = 1;
-            Interval = 200;
+            Interval = 100;
         }        
 
         public int StartSpinner()
@@ -98,9 +98,9 @@ namespace ConsoleBowling
 
         private void BuildScoreZones()
         {
-            int[] halfZone = new int[(MaxPins - 1) * ZoneMultiplier];
+            int[] halfZone = new int[MaxPins * ZoneMultiplier];
             int lastIndex = 0;
-            for (int i = 1; i < MaxPins; i++)
+            for (int i = 0; i < MaxPins; i++)
             {
                 for (int j = 0; j < ZoneMultiplier; j++, lastIndex++)
                 {
@@ -117,7 +117,7 @@ namespace ConsoleBowling
 
         private void BuildSpinner()
         {
-            int halfSpinnerSize = ZoneMultiplier * (MaxPins - 1);
+            int halfSpinnerSize = MaxPins * ZoneMultiplier;
 
             indicator = new StringBuilder();
             indicator.Append('|')
