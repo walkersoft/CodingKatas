@@ -43,19 +43,19 @@ namespace ConsoleBowling
                 if (maxPins < 11)
                 {
                     ZoneMultiplier = 1;
-                    Interval = 35;
+                    Interval = 38;
                 }
 
-                if (maxPins < 4)
+                if (maxPins < 6)
                 {
                     ZoneMultiplier = 2;
-                    Interval = 47;
+                    Interval = 46;
                 }
 
                 if (maxPins < 2)
                 {
-                    ZoneMultiplier = 3;
-                    Interval = 49;
+                    ZoneMultiplier = 4;
+                    Interval = 54;
                 }
             }
         }
