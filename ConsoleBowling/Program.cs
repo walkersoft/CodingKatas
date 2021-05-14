@@ -95,7 +95,7 @@ do
 
         if (inputScore == 10)
         {
-            displayFrameRolls[displayFrameRollsIndex, ballIndex] = "X";
+            displayFrameRolls[displayFrameRollsIndex, ballIndex] = (ballIndex == 2 && gameRolls[^2] != 10) ? "/" : "X";
             ballIndex++;
             spinner.MaxPins = 10;
             continue;
@@ -105,9 +105,9 @@ do
             spinner.MaxPins = 10 - inputScore;
         }
 
-        if ((ballIndex == 1 || ballIndex == 2) && (inputScore + gameRolls[^2] == 10))
+        if (ballIndex == 1 && (inputScore + gameRolls[^2] == 10))
         {
-            displayFrameRolls[displayFrameRollsIndex, ballIndex] = "/";
+            displayFrameRolls[displayFrameRollsIndex, ballIndex] = inputScore == 0 ? "0" : "/";
             ballIndex++;
             spinner.MaxPins = 10;
             continue;
