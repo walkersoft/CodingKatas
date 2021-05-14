@@ -18,6 +18,7 @@ namespace ConsoleBowling
         public void DrawScoreboard(int[] gameRolls, string[,] displayRolls, string[] displayFrames)
         {
             Console.SetCursorPosition(0, 0);
+            DrawHeader();
             DrawBorder();
             Console.Write("|");
 
@@ -81,6 +82,23 @@ namespace ConsoleBowling
             Console.SetCursorPosition(0, line);
             Console.Write(string.Format("{0,80}", " "));
             Console.SetCursorPosition(0, line);
+        }
+
+        private void DrawHeader()
+        {
+            //my ascii art skills suck!
+            Console.WriteLine(@"                        __");
+            Console.WriteLine(@"                  _    /  \    _");
+            Console.WriteLine(@"                 / \   |  |   / \");
+            Console.WriteLine(@"                 | |   \__/   | |");
+            Console.WriteLine(@"                 \_/   /  \   \_/");
+            Console.WriteLine(@"                 / \  /    \  / \");
+            Console.WriteLine(@"                /   \ |----| /   \");
+            Console.WriteLine(@"                |---| |----| |---|");
+            Console.WriteLine(@"                |---| |    | |---|");
+            Console.WriteLine(@"                |   | |    | |   |");
+            Console.WriteLine(@"                \___/ \____/ \___/");
+            Console.WriteLine(@"            <====CONSOLE==BOWLING====>");
         }
     }
 }
