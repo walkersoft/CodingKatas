@@ -33,8 +33,6 @@ do
     }
 
     int inputScore = ui.GetInput();
-
-
     gameRolls.Add(inputScore);
     frames = scorer.CalculateScore(gameRolls.ToArray());
 
@@ -128,14 +126,12 @@ do
         }
 
         ballIndex++;
-
     }
 }
 while (true);
 
 Console.WriteLine();
-Console.WriteLine(string.Format("Game concluded. Total Score: {0}", frames[10]));
-Console.WriteLine();
+Console.WriteLine(string.Format("Game concluded. Total Score: {0}\n\n\n", frames[10]));
 
 static void InitGameState(ref string[,] displayFrameRolls, ref string[] displayFrames)
 {
