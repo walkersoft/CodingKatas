@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleBowling
 {
@@ -15,6 +11,12 @@ namespace ConsoleBowling
             this.spinner = spinner;
         }
 
+        /// <summary>
+        /// Draws the entire scoreboard to the console window.
+        /// </summary>
+        /// <param name="gameRolls">An array of rolls the player has taken.</param>
+        /// <param name="displayRolls">An array of rolls, as they are to be displayed.</param>
+        /// <param name="displayFrames">An array of frames, as they ar eto be displayed.</param>
         public void DrawScoreboard(int[] gameRolls, string[,] displayRolls, string[] displayFrames)
         {
             Console.SetCursorPosition(0, 0);
@@ -31,6 +33,26 @@ namespace ConsoleBowling
             DrawBorder();
             DrawScores(displayRolls, displayFrames);
             DrawBorder();
+        }
+
+        /// <summary>
+        /// Starts the bowling "spinner" and prompts the user to press enter to bowl.
+        /// </summary>
+        /// <returns>Returns an integer of the amount of pins the player scored.</returns>
+        public int GetInput()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Press <Enter> to bowl...");
+            (int col, int line) = Console.GetCursorPosition();
+
+            while (true)
+            {
+                spinner.DisplayColumn = col;
+                spinner.DisplayRow = line;
+                ClearLine(line);
+                ClearLine(line + 1);
+                return spinner.StartSpinner();
+            }
         }
 
         private void DrawScores(string[,] displayRolls, string[] displayFrames)
@@ -59,22 +81,6 @@ namespace ConsoleBowling
                 Console.Write("----+");
             }
             Console.WriteLine();
-        }
-
-        public int GetInput()
-        {
-            Console.WriteLine();
-            Console.WriteLine("Press <Enter> to bowl...");
-            (int col, int line) = Console.GetCursorPosition();
-
-            while (true)
-            {
-                spinner.DisplayColumn = col;
-                spinner.DisplayRow = line;
-                ClearLine(line);
-                ClearLine(line + 1);
-                return spinner.StartSpinner();
-            }
         }
 
         private void ClearLine(int line)

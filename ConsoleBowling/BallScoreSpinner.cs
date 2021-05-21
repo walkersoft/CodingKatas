@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace ConsoleBowling
 {
     public class BallScoreSpinner
     {
-        bool movingRight = true;
-        int multiplier;
-        int interval;
-        int maxPins;
-        int spinnerPos = 0;
-        int[] scoreZones;
-        StringBuilder spinner, indicator;
-        Timer timer;
+        private bool movingRight = true;
+        private int multiplier;
+        private int interval;
+        private int maxPins;
+        private int spinnerPos = 0;
+        private int[] scoreZones;
+        private StringBuilder spinner, indicator;
+        private Timer timer;
 
         public int DisplayColumn { get; set; }
         public int DisplayRow { get; set; }
@@ -38,6 +35,8 @@ namespace ConsoleBowling
             get => maxPins; 
             set
             {
+                //The setter for this value also sets the difficulty interval used by
+                //the spinner since the two are closely related.
                 maxPins = Math.Clamp(value, 1, 10);
 
                 if (maxPins < 11)
@@ -65,6 +64,15 @@ namespace ConsoleBowling
             MaxPins = 10;
         }        
 
+        /// <summary>
+        /// Handles the setup and initiation of the "spinner" used by the game to collect player input.
+        /// 
+        /// A spinner is a vertical bar that moves a character back and forth.  The entire area is 
+        /// internally broken up into "zones" that hold the score a player will achieve upon pressing
+        /// the enter key.  The speed of the moving character is based on the speed interval set in the
+        /// class and is moved via a method on a timer event.
+        /// </summary>
+        /// <returns>Returns the amount of pins scored by the player.</returns>
         public int StartSpinner()
         {
             BuildScoreZones();
@@ -117,6 +125,9 @@ namespace ConsoleBowling
 
         private void BuildScoreZones()
         {
+            //score zones are based on the amount of pins available to score and
+            //the multiplier for a zone.  The zone multiplier determines how many
+            //spaces on each side of the max score the lower scores will have.
             int[] halfZone = new int[MaxPins * ZoneMultiplier];
             int lastIndex = 0;
             for (int i = 0; i < MaxPins; i++)

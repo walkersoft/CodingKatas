@@ -1,17 +1,17 @@
 ﻿using ConsoleBowling;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 
 ScoringCalculator scorer = new();
 BallScoreSpinner spinner = new();
 GameUI ui = new(spinner);
 
-//game state variables
+//variable related to display only
 string[,] displayFrameRolls = new string[10, 3];
 int displayFrameRollsIndex = 0;
 string[] displayFrames = new string[11];
+
+//variables related to game logic
 List<int> gameRolls = new();
 int ballIndex = 0;
 int[] frames = new int[11];
