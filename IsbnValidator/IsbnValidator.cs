@@ -11,8 +11,7 @@ namespace IsbnValidator
         public string ParsedIsbn { get; private set; }
         public int CheckDigit { get; private set; }
 
-        private delegate bool CheckDigitValidator(string inputIsbn);
-        private CheckDigitValidator validator;
+        private Func<string, bool> validator;
 
         public IsbnValidator()
         {
