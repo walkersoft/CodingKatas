@@ -59,10 +59,10 @@ namespace IsbnValidator
             int weightThree = 0;
             foreach (var index in new int[] { 1, 3, 5, 7, 9, 11 })
             {
-                weightThree += int.Parse(inputIsbn[index].ToString());
+                weightThree += int.Parse(inputIsbn[index].ToString()) * 3;
             }
 
-            CheckDigit = 10 - ((weightOne + weightThree * 3) % 10);
+            CheckDigit = 10 - ((weightOne + weightThree) % 10);
             return ParsedIsbn[12].ToString().CompareTo(CheckDigit.ToString()) == 0;
         }
 
